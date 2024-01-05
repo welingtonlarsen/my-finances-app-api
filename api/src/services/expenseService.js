@@ -15,3 +15,15 @@ exports.createExpense = async (data) => {
 
   return await expenseRepository.createExpense({...data, installments, currentInstallment});
 };
+
+exports.getAllExpenses = async (month, year) => {
+  if(month && year) {
+    return expenseRepository.getExpenses(month, year)
+  } else {
+    return expenseRepository.getAllExpenses()
+  }
+}
+
+exports.sumExpenses = (expenses) => {
+  return expenses.reduce((sum, current) => sum + current.amount, 0)
+}
