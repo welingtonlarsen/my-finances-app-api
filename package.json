@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run prisma:client && npm run prisma:migrate && && node src/app.js",
+    "start": "npm run prisma:client && npm run prisma:migrate && node src/app.js",
     "dev": "npm run prisma:client && npm run prisma:migrate && nodemon src/app.js",
     "prisma:migrate": "prisma migrate dev",
     "prisma:client": "prisma generate"
