@@ -31,3 +31,7 @@ exports.getAllExpenses = async (month, year) => {
 exports.sumExpenses = (expenses) => {
   return expenses.reduce((sum, current) => sum + current.amount, 0);
 };
+
+exports.deleteManyExpenses = async (ids) => {
+  return await expenseRepository.deleteManyExpenses(ids);
+};

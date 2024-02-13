@@ -41,3 +41,13 @@ exports.getExpenses = async (month, year) => {
     },
   });
 };
+
+exports.deleteManyExpenses = async (ids) => {
+  return await prisma.expense.deleteMany({
+    where: {
+      id: {
+        in: ids,
+      },
+    },
+  });
+};

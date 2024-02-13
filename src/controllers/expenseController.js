@@ -1,4 +1,4 @@
-const expenseService = require('../services/expenseService');
+const expenseService = require("../services/expenseService");
 
 exports.createExpense = async (req, res) => {
   try {
@@ -12,13 +12,23 @@ exports.createExpense = async (req, res) => {
 exports.getAllExpenses = async (req, res) => {
   try {
     const { month, year } = req.query;
-    const allExpenses = await expenseService.getAllExpenses(month, year)
-    const total = expenseService.sumExpenses(allExpenses)
+    const allExpenses = await expenseService.getAllExpenses(month, year);
+    const total = expenseService.sumExpenses(allExpenses);
     res.status(200).json({
       expenses: allExpenses,
-      total
-    })
+      total,
+    });
   } catch (error) {
-    res.status(500).json({message: error.message})
+    res.status(500).json({ message: error.message });
   }
-}
+};
+
+exports.deleteManyExpenses = async (req, res) => {
+  try {
+    const { ids } = req.body;
+    await expenseService.deleteManyExpenses(ids);
+    res.status(204).end();
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
