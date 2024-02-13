@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 exports.createExpense = async (data) => {
   const isoDate = new Date(data.date);
-  return await prisma.expense.create({
+  return prisma.expense.create({
     data: {
       ...data,
       date: isoDate,
@@ -13,19 +13,30 @@ exports.createExpense = async (data) => {
   });
 };
 
-exports.getAllExpenses = async () => {
+exports.getById = async (id) => {
+  return prisma.expense.findUnique({
+    where: {
+      id: parseInt(id),
+    },
+    include: {
+      category: true, // Inclui os dados da categoria
+      paymentMethod: true, // Inclui os dados do método de pagamento
+    },
+  });
+};
+
+exports.getAllExpenses = async (orderBy) => {
+  console.log(JSON.parse(orderBy));
   return prisma.expense.findMany({
     include: {
       category: true, // Inclui os dados da categoria
       paymentMethod: true, // Inclui os dados do método de pagamento
     },
-    orderBy: {
-      date: "desc",
-    },
+    orderBy: JSON.parse(orderBy),
   });
 };
 
-exports.getExpenses = async (month, year) => {
+exports.getExpenses = async (month, year, orderBy) => {
   const startDate = startOfMonth(
     parse(`${month} ${year}`, "MMMM yyyy", new Date())
   );
@@ -39,11 +50,26 @@ exports.getExpenses = async (month, year) => {
       category: true, // Inclui os dados da categoria
       paymentMethod: true, // Inclui os dados do método de pagamento
     },
+    orderBy,
+    // orderBy: {
+    //   date: "desc",
+    // },
+  });
+};
+
+exports.updateExpense = async (id, data) => {
+  return prisma.expense.update({
+    where: {
+      id: parseInt(id),
+    },
+    data: {
+      ...data,
+    },
   });
 };
 
 exports.deleteManyExpenses = async (ids) => {
-  return await prisma.expense.deleteMany({
+  return prisma.expense.deleteMany({
     where: {
       id: {
         in: ids,

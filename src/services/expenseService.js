@@ -20,16 +20,24 @@ exports.createExpense = async (data) => {
   });
 };
 
-exports.getAllExpenses = async (month, year) => {
+exports.getById = async (id) => {
+  return expenseRepository.getById(id);
+};
+
+exports.getAllExpenses = async (month, year, orderBy) => {
   if (month && year) {
-    return expenseRepository.getExpenses(month, year);
+    return expenseRepository.getExpenses(month, year, orderBy);
   } else {
-    return expenseRepository.getAllExpenses();
+    return expenseRepository.getAllExpenses(orderBy);
   }
 };
 
 exports.sumExpenses = (expenses) => {
   return expenses.reduce((sum, current) => sum + current.amount, 0);
+};
+
+exports.updateExpense = async (id, data) => {
+  return expenseRepository.updateExpense(id, data);
 };
 
 exports.deleteManyExpenses = async (ids) => {

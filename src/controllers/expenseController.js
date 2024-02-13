@@ -9,15 +9,39 @@ exports.createExpense = async (req, res) => {
   }
 };
 
+exports.getById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const expense = await expenseService.getById(id);
+    res.status(200).json(expense);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 exports.getAllExpenses = async (req, res) => {
   try {
-    const { month, year } = req.query;
-    const allExpenses = await expenseService.getAllExpenses(month, year);
+    const { month, year, orderBy } = req.query;
+    const allExpenses = await expenseService.getAllExpenses(
+      month,
+      year,
+      orderBy
+    );
     const total = expenseService.sumExpenses(allExpenses);
     res.status(200).json({
       expenses: allExpenses,
       total,
     });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.updateExpense = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const expense = await expenseService.updateExpense(id, req.body);
+    res.status(200).json(expense);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
