@@ -26,13 +26,12 @@ exports.getById = async (id) => {
 };
 
 exports.getAllExpenses = async (orderBy) => {
-  console.log(JSON.parse(orderBy));
   return prisma.expense.findMany({
     include: {
       category: true, // Inclui os dados da categoria
       paymentMethod: true, // Inclui os dados do método de pagamento
     },
-    orderBy: JSON.parse(orderBy),
+    orderBy: orderBy ? JSON.parse(orderBy) : undefined,
   });
 };
 
@@ -50,7 +49,7 @@ exports.getExpenses = async (month, year, orderBy) => {
       category: true, // Inclui os dados da categoria
       paymentMethod: true, // Inclui os dados do método de pagamento
     },
-    orderBy,
+    orderBy: orderBy ? JSON.parse(orderBy) : undefined,
     // orderBy: {
     //   date: "desc",
     // },

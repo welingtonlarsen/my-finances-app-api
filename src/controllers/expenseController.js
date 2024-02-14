@@ -21,6 +21,7 @@ exports.getById = async (req, res) => {
 
 exports.getAllExpenses = async (req, res) => {
   try {
+    console.log("getall");
     const { month, year, orderBy } = req.query;
     const allExpenses = await expenseService.getAllExpenses(
       month,
