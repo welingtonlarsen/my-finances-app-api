@@ -76,3 +76,41 @@ exports.deleteManyExpenses = async (ids) => {
     },
   });
 };
+
+const paymentMethodIdToSlug = {
+  1: 'credit_card',
+  2: 'debit_card',
+  3: 'pix',
+  4: 'cash',
+}
+
+exports.getSummaryOfExpenses = async (month, year) => {
+  const startDate = startOfMonth(
+    parse(`${month} ${year}`, "MMMM yyyy", new Date())
+  );
+  const endDate = endOfMonth(startDate);
+
+  const expenses = await prisma.expense.findMany({
+    where: {
+      AND: [{ date: { gte: startDate } }, { date: { lt: endDate } }],
+    },
+    include: {
+      category: true, // Inclui os dados da categoria
+      paymentMethod: true, // Inclui os dados do método de pagamento
+    }
+  });
+
+  return expenses.reduce((acc, current) => {
+    const paymentMethod = paymentMethodIdToSlug[current.paymentMethod.id];
+    const amount = current.amount
+    return {
+      ...acc,
+      [paymentMethod]: acc[paymentMethod] + amount
+    }
+  }, {
+    credit_card: 0,
+    debit_card: 0,
+    pix: 0,
+    cash: 0,
+  })
+};

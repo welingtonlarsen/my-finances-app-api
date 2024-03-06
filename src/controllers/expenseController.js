@@ -21,7 +21,6 @@ exports.getById = async (req, res) => {
 
 exports.getAllExpenses = async (req, res) => {
   try {
-    console.log("getall");
     const { month, year, orderBy } = req.query;
     const allExpenses = await expenseService.getAllExpenses(
       month,
@@ -57,3 +56,13 @@ exports.deleteManyExpenses = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.getSummaryOfExpenses = async (req, res) => {
+  try {
+    const { month, year } = req.query;
+    const summary = await expenseService.getSummaryOfExpenses(month, year);
+    res.status(200).json(summary);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}

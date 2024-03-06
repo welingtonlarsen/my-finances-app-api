@@ -43,3 +43,7 @@ exports.updateExpense = async (id, data) => {
 exports.deleteManyExpenses = async (ids) => {
   return await expenseRepository.deleteManyExpenses(ids);
 };
+
+exports.getSummaryOfExpenses = async (month, year) => {
+  return expenseRepository.getSummaryOfExpenses(month, year);
+}
