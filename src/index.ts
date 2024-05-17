@@ -13,6 +13,8 @@ import CategoryQuery from './query/category.query'
 import PaymentMethodQuery from './query/payment-method.query'
 import cors from 'cors'
 
+const port = process.env.PORT ?? 3000
+
 const prismaClient = new PrismaClient()
 
 const categoryRepository = new CategoryOrmRepository(prismaClient)
@@ -77,6 +79,6 @@ app.post('/expense', async (req: Request, res: Response) => {
 
 app.use(errorHandler)
 
-app.listen(3000, () => {
-  console.log('Server started on port 3000')
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`)
 })
