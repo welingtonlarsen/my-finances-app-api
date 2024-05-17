@@ -9,7 +9,7 @@
     "dev": "ts-node-dev --respawn --ignore-watch node_modules --transpile-only src/index.ts",
     "test": "jest",
     "lint:fix": "eslint src/**/*.ts --fix",
-    "build:pripeline": "prisma generate && npx prisma migrate deploy && yarn build",
+    "build:pipeline": "prisma generate && npx prisma migrate deploy && yarn build",
     "prisma:generate": "yarn prisma generate",
     "prisma:migration:create": "yarn prisma migrate dev --name",
     "prisma:migration:execute:dev": "yarn prisma migrate dev"
