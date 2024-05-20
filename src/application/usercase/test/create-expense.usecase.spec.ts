@@ -11,7 +11,8 @@ const id = 1
 const installments = faker.number.int({ min: 1, max: 10 })
 
 const mockedExpenseRepository: jest.Mocked<ExpenseRepository> = {
-  create: jest.fn()
+  create: jest.fn(),
+  delete: jest.fn()
 }
 
 describe('Create expense use case test', () => {

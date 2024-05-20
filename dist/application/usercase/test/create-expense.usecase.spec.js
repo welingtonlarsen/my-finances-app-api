@@ -12,7 +12,8 @@ const date = new Date();
 const id = 1;
 const installments = faker_1.faker.number.int({ min: 1, max: 10 });
 const mockedExpenseRepository = {
-    create: jest.fn()
+    create: jest.fn(),
+    delete: jest.fn()
 };
 describe('Create expense use case test', () => {
     const createExpenseUseCase = new create_expense_usecase_1.CreateExpenseUseCase(mockedExpenseRepository);

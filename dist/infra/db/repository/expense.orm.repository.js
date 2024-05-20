@@ -27,5 +27,17 @@ class ExpenseORMRepository {
             throw new repository_generic_error_1.default(`Error trying to persist expense "${class_transform_util_1.default.classToStringPlain(expenseEntity)}".`);
         }
     }
+    async delete(expenseId) {
+        try {
+            await this.prismaClient.expense.delete({
+                where: {
+                    id: expenseId
+                }
+            });
+        }
+        catch (err) {
+            throw new repository_generic_error_1.default(`Error trying to delete expense "${expenseId}".`);
+        }
+    }
 }
 exports.default = ExpenseORMRepository;

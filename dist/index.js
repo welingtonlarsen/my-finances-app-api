@@ -17,6 +17,7 @@ const expense_query_1 = __importDefault(require("./query/expense.query"));
 const category_query_1 = __importDefault(require("./query/category.query"));
 const payment_method_query_1 = __importDefault(require("./query/payment-method.query"));
 const cors_1 = __importDefault(require("cors"));
+const delete_expense_usecase_1 = require("./application/usercase/delete-expense.usecase");
 const port = process.env.PORT ?? 3000;
 const prismaClient = new client_1.PrismaClient();
 const categoryRepository = new category_orm_repository_1.default(prismaClient);
@@ -27,6 +28,7 @@ const paymentMethodUseCase = new create_payment_method_usecase_1.default(payment
 const paymentMethodQuery = new payment_method_query_1.default(prismaClient);
 const expenseRepository = new expense_orm_repository_1.default(prismaClient);
 const createExpenseUseCase = new create_expense_usecase_1.CreateExpenseUseCase(expenseRepository);
+const deleteExpenseUseCase = new delete_expense_usecase_1.DeleeteExpenseUseCase(expenseRepository);
 const expenseQuery = new expense_query_1.default(prismaClient);
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
@@ -67,6 +69,11 @@ app.post('/expense', async (req, res) => {
     const { amount, description, date: dateStr, categoryId, paymentMethodId, installments, currentInstallment } = req.body;
     const expense = await createExpenseUseCase.execute({ amount, description, date: new Date(dateStr), categoryId, paymentMethodId, installments, currentInstallment });
     return res.status(201).json(expense);
+});
+app.delete('/expenses/:id', async (req, res) => {
+    const { id } = req.params;
+    await deleteExpenseUseCase.execute(Number(id));
+    return res.status(204).send();
 });
 app.use(error_handler_1.errorHandler);
 app.listen(port, () => {
