@@ -12,6 +12,7 @@ import ExpenseQuery from './query/expense.query'
 import CategoryQuery from './query/category.query'
 import PaymentMethodQuery from './query/payment-method.query'
 import cors from 'cors'
+import { DeleeteExpenseUseCase } from './application/usercase/delete-expense.usecase'
 
 const port = process.env.PORT ?? 3000
 
@@ -27,6 +28,7 @@ const paymentMethodQuery = new PaymentMethodQuery(prismaClient)
 
 const expenseRepository = new ExpenseORMRepository(prismaClient)
 const createExpenseUseCase = new CreateExpenseUseCase(expenseRepository)
+const deleteExpenseUseCase = new DeleeteExpenseUseCase(expenseRepository)
 const expenseQuery = new ExpenseQuery(prismaClient)
 
 const app = express()
@@ -75,6 +77,12 @@ app.post('/expense', async (req: Request, res: Response) => {
   const { amount, description, date: dateStr, categoryId, paymentMethodId, installments, currentInstallment } = req.body
   const expense = await createExpenseUseCase.execute({ amount, description, date: new Date(dateStr as string), categoryId, paymentMethodId, installments, currentInstallment })
   return res.status(201).json(expense)
+})
+
+app.delete('/expenses/:id', async (req: Request, res: Response) => {
+  const { id } = req.params
+  await deleteExpenseUseCase.execute(Number(id))
+  return res.status(204).send()
 })
 
 app.use(errorHandler)

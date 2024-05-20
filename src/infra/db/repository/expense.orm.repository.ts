@@ -9,6 +9,7 @@ import RepositoryGenericError from '../../../application/error/repository-generi
 export default class ExpenseORMRepository implements ExpenseRepository {
   constructor (private readonly prismaClient: PrismaClient) {}
 
+
   async create (expenseEntity: ExpenseEntity): Promise<ExpenseEntity> {
     try {
       const {
@@ -30,6 +31,18 @@ export default class ExpenseORMRepository implements ExpenseRepository {
         throw new ForeignKeyError(`Foreign key error on expense "${ClassTransformUtil.classToStringPlain(expenseEntity)}".`)
       }
       throw new RepositoryGenericError(`Error trying to persist expense "${ClassTransformUtil.classToStringPlain(expenseEntity)}".`)
+    }
+  }
+
+  async delete (expenseId: number): Promise<void> {
+    try {
+      await this.prismaClient.expense.delete({
+        where: {
+          id: expenseId
+        }
+      })
+    } catch (err) {
+      throw new RepositoryGenericError(`Error trying to delete expense "${expenseId}".`)
     }
   }
 }
