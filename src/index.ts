@@ -14,6 +14,7 @@ import PaymentMethodQuery from './query/payment-method.query'
 import cors from 'cors'
 import { DeleeteExpenseUseCase } from './application/usercase/delete-expense.usecase'
 import { PaymentMethodService } from './service/payment-method.service'
+import ExpensesService from './service/expenses.service'
 
 const port = process.env.PORT ?? 3000
 
@@ -32,6 +33,7 @@ const expenseRepository = new ExpenseORMRepository(prismaClient)
 const createExpenseUseCase = new CreateExpenseUseCase(expenseRepository)
 const deleteExpenseUseCase = new DeleeteExpenseUseCase(expenseRepository)
 const expenseQuery = new ExpenseQuery(prismaClient)
+const expensesService = new ExpensesService(prismaClient)
 
 const app = express()
 app.use(cors())
@@ -76,7 +78,7 @@ app.get('/expense', async (req: Request, res: Response) => {
 })
 
 app.get('/expenses/sum', async (req: Request, res: Response) => {
-  const result = await expenseQuery.fetchSummedExpensesGroupedByPaymentType()
+  const result = await expensesService.fetchSummedExpensesGroupedByPaymentType()
   return res.status(200).json(result)
 })
 
