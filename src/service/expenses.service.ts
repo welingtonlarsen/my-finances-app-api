@@ -10,7 +10,7 @@ export default class ExpensesService {
       FROM "Expense" ex
       RIGHT JOIN "PaymentMethod" pm ON ex."paymentMethodId" = pm.id
       GROUP BY pm."name", pm.id
-      ORDER BY sum ASC;
+      ORDER BY sum DESC;
     `
   }
 }
