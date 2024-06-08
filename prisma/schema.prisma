@@ -47,3 +47,10 @@ model Expense {
   installments    Int           @default(1)
   currentInstallment    Int           @default(1)
 }
+
+model User {
+  id       Int     @id @default(autoincrement())
+  name     String
+  email    String  @unique
+  password String
+}

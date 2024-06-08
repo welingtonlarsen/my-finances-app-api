@@ -15,6 +15,8 @@ import cors from 'cors'
 import { DeleeteExpenseUseCase } from './application/usercase/delete-expense.usecase'
 import { PaymentMethodService } from './service/payment-method.service'
 import ExpensesService from './service/expenses.service'
+import UserService from './service/user.service'
+import AuthService from './service/auth.service'
 
 const port = process.env.PORT ?? 3000
 
@@ -34,6 +36,9 @@ const createExpenseUseCase = new CreateExpenseUseCase(expenseRepository)
 const deleteExpenseUseCase = new DeleeteExpenseUseCase(expenseRepository)
 const expenseQuery = new ExpenseQuery(prismaClient)
 const expensesService = new ExpensesService(prismaClient)
+
+const userService = new UserService(prismaClient)
+const authService = new AuthService(prismaClient)
 
 const app = express()
 app.use(cors())
@@ -92,6 +97,18 @@ app.delete('/expenses/:id', async (req: Request, res: Response) => {
   const { id } = req.params
   await deleteExpenseUseCase.execute(Number(id))
   return res.status(204).send()
+})
+
+app.post('/users', async (req: Request, res: Response) => {
+  const { name, email, password } = req.body
+  const user = await userService.createUser({ name, email, password })
+  return res.status(201).json(user)
+})
+
+app.post('/users/authenticate', async (req: Request, res: Response) => {
+  const { email, password } = req.body
+  const token = await authService.authenticate({ email, password })
+  return res.status(200).json({ token })
 })
 
 app.use(errorHandler)
