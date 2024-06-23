@@ -107,8 +107,8 @@ app.post('/users', async (req: Request, res: Response) => {
 
 app.post('/users/authenticate', async (req: Request, res: Response) => {
   const { email, password } = req.body
-  const token = await authService.authenticate({ email, password })
-  return res.status(200).json({ token })
+  const userDetails = await authService.authenticate({ email, password })
+  return res.status(200).json(userDetails)
 })
 
 app.use(errorHandler)
