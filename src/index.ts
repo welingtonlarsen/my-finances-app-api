@@ -17,6 +17,7 @@ import { PaymentMethodService } from './service/payment-method.service'
 import ExpensesService from './service/expenses.service'
 import UserService from './service/user.service'
 import AuthService from './service/auth.service'
+import { authMiddleware } from './infra/express/auth.middleware'
 
 const port = process.env.PORT ?? 3000
 
@@ -44,59 +45,9 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
+// public routes
 app.get('/health', (req: Request, res: Response) => {
   res.send('health ok')
-})
-
-app.get('/category', async (req: Request, res: Response) => {
-  const { page, size } = req.query
-  const result = await categoryQuery.fetchAll(page ? Number(page) : 1, size ? Number(size) : 10)
-  return res.status(200).json(result)
-})
-
-app.post('/category', async (req: Request, res: Response) => {
-  const { name, colorHexCode } = req.body
-  const category = await createCategoryUseCase.execute({ name, colorHexCode })
-  return res.status(201).json({ ...category })
-})
-
-app.get('/paymentmethod', async (req: Request, res: Response) => {
-  const { page, size } = req.query
-  const result = await paymentMethodQuery.fetchAll(page ? Number(page) : 1, size ? Number(size) : 10)
-  return res.status(200).json(result)
-})
-app.post('/paymentmethod', async (req: Request, res: Response) => {
-  const { name, paymentType } = req.body
-  const paymentMethod = await paymentMethodUseCase.execute({ name, paymentType })
-  return res.status(201).json({ ...paymentMethod })
-})
-app.delete('/paymentmethod/:id', async (req: Request, res: Response) => {
-  const { id } = req.params
-  await paymentMethodService.delete(Number(id))
-  return res.status(204).send()
-})
-
-app.get('/expense', async (req: Request, res: Response) => {
-  const { page, size } = req.query
-  const result = await expenseQuery.fetchAll(page ? Number(page) : 1, size ? Number(size) : 10)
-  return res.status(200).json(result)
-})
-
-app.get('/expenses/sum', async (req: Request, res: Response) => {
-  const result = await expensesService.fetchSummedExpensesGroupedByPaymentType()
-  return res.status(200).json(result)
-})
-
-app.post('/expense', async (req: Request, res: Response) => {
-  const { amount, description, date: dateStr, categoryId, paymentMethodId, installments, currentInstallment } = req.body
-  const expense = await createExpenseUseCase.execute({ amount, description, date: new Date(dateStr as string), categoryId, paymentMethodId, installments, currentInstallment })
-  return res.status(201).json(expense)
-})
-
-app.delete('/expenses/:id', async (req: Request, res: Response) => {
-  const { id } = req.params
-  await deleteExpenseUseCase.execute(Number(id))
-  return res.status(204).send()
 })
 
 app.post('/users', async (req: Request, res: Response) => {
@@ -109,6 +60,58 @@ app.post('/users/authenticate', async (req: Request, res: Response) => {
   const { email, password } = req.body
   const userDetails = await authService.authenticate({ email, password })
   return res.status(200).json(userDetails)
+})
+
+// private routes
+app.get('/category', authMiddleware, async (req: Request, res: Response) => {
+  const { page, size } = req.query
+  const result = await categoryQuery.fetchAll(page ? Number(page) : 1, size ? Number(size) : 10)
+  return res.status(200).json(result)
+})
+
+app.post('/category', authMiddleware, async (req: Request, res: Response) => {
+  const { name, colorHexCode } = req.body
+  const category = await createCategoryUseCase.execute({ name, colorHexCode })
+  return res.status(201).json({ ...category })
+})
+
+app.get('/paymentmethod', authMiddleware, async (req: Request, res: Response) => {
+  const { page, size } = req.query
+  const result = await paymentMethodQuery.fetchAll(page ? Number(page) : 1, size ? Number(size) : 10)
+  return res.status(200).json(result)
+})
+app.post('/paymentmethod', authMiddleware, async (req: Request, res: Response) => {
+  const { name, paymentType } = req.body
+  const paymentMethod = await paymentMethodUseCase.execute({ name, paymentType })
+  return res.status(201).json({ ...paymentMethod })
+})
+app.delete('/paymentmethod/:id', authMiddleware, async (req: Request, res: Response) => {
+  const { id } = req.params
+  await paymentMethodService.delete(Number(id))
+  return res.status(204).send()
+})
+
+app.get('/expense', authMiddleware, async (req: Request, res: Response) => {
+  const { page, size } = req.query
+  const result = await expenseQuery.fetchAll(page ? Number(page) : 1, size ? Number(size) : 10)
+  return res.status(200).json(result)
+})
+
+app.get('/expenses/sum', authMiddleware, async (req: Request, res: Response) => {
+  const result = await expensesService.fetchSummedExpensesGroupedByPaymentType()
+  return res.status(200).json(result)
+})
+
+app.post('/expense', authMiddleware, async (req: Request, res: Response) => {
+  const { amount, description, date: dateStr, categoryId, paymentMethodId, installments, currentInstallment } = req.body
+  const expense = await createExpenseUseCase.execute({ amount, description, date: new Date(dateStr as string), categoryId, paymentMethodId, installments, currentInstallment })
+  return res.status(201).json(expense)
+})
+
+app.delete('/expenses/:id', authMiddleware, async (req: Request, res: Response) => {
+  const { id } = req.params
+  await deleteExpenseUseCase.execute(Number(id))
+  return res.status(204).send()
 })
 
 app.use(errorHandler)
