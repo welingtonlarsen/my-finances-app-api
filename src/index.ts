@@ -92,13 +92,14 @@ app.delete('/paymentmethod/:id', authMiddleware, async (req: Request, res: Respo
 })
 
 app.get('/expense', authMiddleware, async (req: Request, res: Response) => {
-  const { page, size } = req.query
-  const result = await expenseQuery.fetchAll(page ? Number(page) : 1, size ? Number(size) : 10)
+  const { page, size, from, to } = req.query
+  const result = await expenseQuery.fetchAll(page ? Number(page) : 1, size ? Number(size) : 10, String(from), String(to))
   return res.status(200).json(result)
 })
 
 app.get('/expenses/sum', authMiddleware, async (req: Request, res: Response) => {
-  const result = await expensesService.fetchSummedExpensesGroupedByPaymentType()
+  const { from, to } = req.query
+  const result = await expensesService.fetchSummedExpensesGroupedByPaymentType(String(from), String(to))
   return res.status(200).json(result)
 })
 
