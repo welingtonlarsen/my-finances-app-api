@@ -8,12 +8,11 @@ export default class ExpensesService {
     const start = new Date(startDate)
     const end = new Date(endDate)
 
-    return this.prisma.$queryRaw`
+    return this.prisma.$queryRaw<ExpensesSumQueryDTO[]>`
       SELECT COALESCE(sum(ex.amount), 0) as sum, pm.name as "paymentMethodName", pm.id as "paymentMethodId"
-      FROM "Expense" ex
-      RIGHT JOIN "PaymentMethod" pm ON ex."paymentMethodId" = pm.id
-      WHERE ex.date >= ${start} AND ex.date <= ${end}
-      GROUP BY pm."name", pm.id
+      FROM "PaymentMethod" pm
+      LEFT JOIN "Expense" ex ON ex."paymentMethodId" = pm.id AND ex.date >= ${start} AND ex.date <= ${end}
+      GROUP BY pm.name, pm.id
       ORDER BY sum DESC;
     `
   }
