@@ -15,9 +15,13 @@ datasource db {
 
 model Category {
   id    Int    @id @default(autoincrement())
-  name  String @unique
+  name  String
   colorHexCode String
+  userId       Int?
+  user         User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expenses Expense[]
+  
+  @@unique([name, userId])
 }
 
 enum PaymentType {
@@ -30,9 +34,13 @@ enum PaymentType {
 
 model PaymentMethod {
   id    Int    @id @default(autoincrement())
-  name  String @unique
+  name  String
   paymentType  PaymentType
+  userId       Int?
+  user         User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expenses Expense[]
+
+  @@unique([name, userId])
 }
 
 model Expense {
@@ -46,6 +54,8 @@ model Expense {
   paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
   installments    Int           @default(1)
   currentInstallment    Int           @default(1)
+  userId       Int?
+  user         User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -53,4 +63,7 @@ model User {
   name     String
   email    String  @unique
   password String
+  categories Category[]
+  paymentMethods PaymentMethod[]
+  expenses Expense[]
 }

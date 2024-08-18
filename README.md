@@ -1,4 +1,5 @@
-### Yarn commands dictionary
+### Prisma ORM commands
+
 ```bash
 # generate ts client and models (already executed under the hood by above command)
 yarn prisma:generate
