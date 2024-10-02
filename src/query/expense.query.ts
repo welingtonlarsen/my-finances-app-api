@@ -26,9 +26,14 @@ export default class ExpenseQuery {
       },
       skip,
       take: size,
-      orderBy: {
-        date: 'desc',
-      },
+      orderBy: [
+        {
+          date: 'desc',
+        },
+        {
+          id: 'desc',
+        },
+      ],
     });
 
     const totalAmount = expenses.reduce((sum, current) => sum + current.amount, 0);
