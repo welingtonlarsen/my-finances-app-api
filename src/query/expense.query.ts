@@ -36,7 +36,21 @@ export default class ExpenseQuery {
       ],
     });
 
-    const totalAmount = expenses.reduce((sum, current) => sum + current.amount, 0);
+    // Fetch the totalAmount for all matching records
+    const totalAmountResult = await this.prisma.expense.aggregate({
+      _sum: {
+        amount: true,
+      },
+      where: {
+        date: {
+          gte: new Date(startDate),
+          lte: new Date(endDate),
+        },
+        userId: Number(this.userId),
+      },
+    });
+
+    const totalAmount = totalAmountResult._sum.amount ?? 0; // Default to 0 if no records found
 
     return {
       expenses,
