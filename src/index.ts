@@ -97,12 +97,13 @@ app.delete('/paymentmethod/:id', authMiddleware, async (req: Request, res: Respo
 });
 
 app.get('/expense', authMiddleware, async (req: Request, res: Response) => {
-  const { page, size, from, to } = req.query;
+  const { page, size, from, to, paymentMethodId } = req.query;
   const result = await expenseQuery.fetchAll(
     page ? Number(page) : 1,
     size ? Number(size) : 10,
     String(from),
     String(to),
+    paymentMethodId ? Number(paymentMethodId) : undefined,
   );
   return res.status(200).json(result);
 });
