@@ -97,13 +97,22 @@ app.delete('/paymentmethod/:id', authMiddleware, async (req: Request, res: Respo
 });
 
 app.get('/expense', authMiddleware, async (req: Request, res: Response) => {
-  const { page, size, from, to, paymentMethodId } = req.query;
+  const { page, size, from, to, paymentMethodIdsIn } = req.query;
+
+  let sanitezedPaymentMethodsIdsIn: number[] | undefined = [];
+  if (paymentMethodIdsIn) {
+    sanitezedPaymentMethodsIdsIn =
+      typeof paymentMethodIdsIn === 'string' ? JSON.parse(paymentMethodIdsIn) : paymentMethodIdsIn;
+  } else {
+    sanitezedPaymentMethodsIdsIn = undefined;
+  }
+
   const result = await expenseQuery.fetchAll(
     page ? Number(page) : 1,
     size ? Number(size) : 10,
     String(from),
     String(to),
-    paymentMethodId ? Number(paymentMethodId) : undefined,
+    sanitezedPaymentMethodsIdsIn,
   );
   return res.status(200).json(result);
 });

@@ -14,7 +14,7 @@ export default class ExpenseQuery {
     size: number = 10,
     startDate: string,
     endDate: string,
-    paymentMethodId?: number,
+    paymentMethodIds?: number[],
   ): Promise<ExpenseQueryDTO> {
     if (page <= 0) throw new Error('Invalid page');
     const skip = (page - 1) * size;
@@ -26,7 +26,7 @@ export default class ExpenseQuery {
           lte: new Date(endDate),
         },
         userId: Number(this.userId),
-        ...(paymentMethodId && { paymentMethodId }),
+        ...(paymentMethodIds && { paymentMethodId: { in: paymentMethodIds } }),
       },
       include: {
         paymentMethod: true,
@@ -54,7 +54,7 @@ export default class ExpenseQuery {
           lte: new Date(endDate),
         },
         userId: Number(this.userId),
-        ...(paymentMethodId && { paymentMethodId }),
+        ...(paymentMethodIds && { paymentMethodId: { in: paymentMethodIds } }),
       },
     });
 
