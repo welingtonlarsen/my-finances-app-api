@@ -102,7 +102,9 @@ app.get('/expense', authMiddleware, async (req: Request, res: Response) => {
   let sanitezedPaymentMethodsIdsIn: number[] | undefined = [];
   if (paymentMethodIdsIn) {
     sanitezedPaymentMethodsIdsIn =
-      typeof paymentMethodIdsIn === 'string' ? JSON.parse(paymentMethodIdsIn) : paymentMethodIdsIn;
+      typeof paymentMethodIdsIn === 'string'
+        ? JSON.parse(paymentMethodIdsIn)
+        : (paymentMethodIdsIn as unknown as string[]).map((id) => Number(id));
   } else {
     sanitezedPaymentMethodsIdsIn = undefined;
   }
