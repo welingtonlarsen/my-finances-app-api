@@ -1,6 +1,6 @@
 import { hash } from 'bcryptjs';
 import { type PrismaClient } from '@prisma/client';
-import ExistentRegisterError from '../application/error/existent-register.error';
+import ExistentRegisterError from '../../application/error/existent-register.error';
 
 interface UserPayload {
   name: string;

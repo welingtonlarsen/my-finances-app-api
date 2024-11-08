@@ -1,6 +1,6 @@
 import { Router, type Request, type Response } from 'express';
-import AuthService from '../../service/auth.service';
-import UserService from '../../service/user.service';
+import AuthService from '../../domain/service/auth.service';
+import UserService from '../../domain/service/user.service';
 import { getPrismaClient } from '../../infra/db/prisma.instance';
 
 const prismaClient = getPrismaClient();

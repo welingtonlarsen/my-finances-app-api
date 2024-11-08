@@ -2,16 +2,17 @@ import { Router, type Request, type Response } from 'express';
 import { authMiddleware } from '../../infra/express/auth.middleware';
 import { getPrismaClient } from '../../infra/db/prisma.instance';
 import PaymentMethodQuery from '../../query/payment-method.query';
-import { PaymentMethodService } from '../../service/payment-method.service';
+import { PaymentMethodService } from '../../domain/service/payment-method.service';
 
 const router = Router();
 const prismaClient = getPrismaClient();
 
 const paymentMethodService = new PaymentMethodService(prismaClient);
+const paymentMethodQuery = new PaymentMethodQuery(prismaClient);
 
 router.get('/paymentmethod', authMiddleware, async (req: Request, res: Response) => {
   const { page, size } = req.query;
-  const result = await paymentMethodService.fetchAll(page ? Number(page) : 1, size ? Number(size) : 10);
+  const result = await paymentMethodQuery.fetchAll(page ? Number(page) : 1, size ? Number(size) : 10);
   return res.status(200).json(result);
 });
 router.post('/paymentmethod', authMiddleware, async (req: Request, res: Response) => {

@@ -1,7 +1,7 @@
 import { type PrismaClient } from '@prisma/client';
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
-import UserUnauthorized from '../application/error/user-unauthorized';
+import UserUnauthorized from '../../application/error/user-unauthorized';
 
 interface AuthRequest {
   email: string;

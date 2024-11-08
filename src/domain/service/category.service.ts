@@ -1,12 +1,12 @@
 import { PrismaClient } from '@prisma/client';
-import CategoryInputDTO from '../domain/dto/category.input-dto';
-import CategoryEntity from '../domain/entity/category.entity';
-import CategoryFactory from '../domain/factory/category.factory';
+import CategoryInputDTO from '../dto/category.input-dto';
+import CategoryEntity from '../entity/category.entity';
+import CategoryFactory from '../factory/category.factory';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import ExistentRegisterError from '../application/error/existent-register.error';
-import RepositoryGenericError from '../application/error/repository-generic.error';
-import ClassTransformUtil from '../application/util/class-transform.util';
-import { Context } from '../infra/context/store.context';
+import ExistentRegisterError from '../../application/error/existent-register.error';
+import RepositoryGenericError from '../../application/error/repository-generic.error';
+import ClassTransformUtil from '../../application/util/class-transform.util';
+import { Context } from '../../infra/context/store.context';
 
 export default class CategoryService {
   @Context('userId')
