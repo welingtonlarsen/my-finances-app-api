@@ -1,7 +1,6 @@
 import { Router, type Request, type Response } from 'express';
 import { authMiddleware } from '../../infra/express/auth.middleware';
 import { getPrismaClient } from '../../infra/db/prisma.instance';
-import CategoryOrmRepository from '../../infra/db/repository/category.orm.repository';
 import CategoryQuery from '../../query/category.query';
 import CategoryService from '../../domain/service/category.service';
 

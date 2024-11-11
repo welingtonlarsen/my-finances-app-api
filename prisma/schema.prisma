@@ -67,3 +67,41 @@ model User {
   paymentMethods PaymentMethod[]
   expenses Expense[]
 }
+
+enum Month {
+  JANUARY
+  FEBRUARY
+  MARCH
+  APRIL
+  MAY
+  JUNE
+  JULY
+  AUGUST
+  SEPTEMBER
+  OCTOBER
+  NOVEMBER
+  DECEMBER
+}
+
+model Contribution {
+  id       Int     @id @default(autoincrement())
+  date      DateTime @default(now())
+  amount   Float
+  userId       Int
+}
+
+model ContributionBalance {
+  id       Int     @id @default(autoincrement())
+  date      DateTime
+  amount   Float
+  userId       Int
+}
+
+model RetirementPlan {
+  id       Int     @id @default(autoincrement())
+  initialNetWorth   Float
+  monthlyInvestment  Float
+  retirementSalary   Float
+  returnRate        Float
+  userId       Int
+}

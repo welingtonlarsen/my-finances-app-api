@@ -11,7 +11,7 @@
     "lint:fix": "eslint src/**/*.ts --fix",
     "build:pipeline": "prisma generate && npx prisma migrate deploy && yarn build",
     "prisma:generate": "yarn prisma generate",
-    "prisma:migration:create": "yarn prisma migrate dev --name",
+    "prisma:migration:create": "yarn prisma migrate dev --name $npm_config_name",
     "prisma:migration:execute:dev": "yarn prisma migrate dev"
   },
   "keywords": [],
