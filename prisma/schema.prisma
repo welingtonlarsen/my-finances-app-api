@@ -100,8 +100,9 @@ model ContributionBalance {
 model RetirementPlan {
   id       Int     @id @default(autoincrement())
   initialNetWorth   Float
-  monthlyInvestment  Float
-  retirementSalary   Float
-  returnRate        Float
+  monthlyContribution  Float
+  desiredRetirementSalary   Float
+  annualReturnRate        Float
+  endDate      DateTime
   userId       Int
 }

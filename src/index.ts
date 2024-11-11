@@ -10,6 +10,7 @@ import { healthCheckRoutes } from './routes/public/health-check.routes';
 import { expenseRoutes } from './routes/private/expense.routes';
 import { paymentMethodRoutes } from './routes/private/payment-method.routes';
 import { contributionRoutes } from './routes/private/contribution.routes';
+import { retirementPlanRoutes } from './routes/private/retirement-plan.routes';
 
 const port = process.env.PORT ?? 3000;
 
@@ -30,6 +31,7 @@ app.use(categoryRoutes);
 app.use(expenseRoutes);
 app.use(paymentMethodRoutes);
 app.use(contributionRoutes);
+app.use(retirementPlanRoutes);
 
 // Error handler
 app.use(errorHandler);
