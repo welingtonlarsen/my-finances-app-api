@@ -12,7 +12,7 @@ const categoryQuery = new CategoryQuery(prismaClient);
 
 router.get('/category', authMiddleware, async (req: Request, res: Response) => {
   const { page, size } = req.query;
-  const result = await categoryQuery.fetchAll(page ? Number(page) : 1, size ? Number(size) : 10);
+  const result = await categoryQuery.fetchAll(page ? Number(page) : 1, size ? Number(size) : 100);
   return res.status(200).json(result);
 });
 
