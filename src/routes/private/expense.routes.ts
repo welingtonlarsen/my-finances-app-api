@@ -49,7 +49,7 @@ router.post('/expense', authMiddleware, async (req: Request, res: Response) => {
     installments,
     currentInstallment,
   } = req.body;
-  const expense = await expensesService.createExpense({
+  const expenses = await expensesService.createExpenses({
     amount,
     description,
     date: new Date(dateStr as string),
@@ -58,7 +58,7 @@ router.post('/expense', authMiddleware, async (req: Request, res: Response) => {
     installments,
     currentInstallment,
   });
-  return res.status(201).json(expense);
+  return res.status(201).json(expenses);
 });
 
 router.delete('/expense/:id', authMiddleware, async (req: Request, res: Response) => {
