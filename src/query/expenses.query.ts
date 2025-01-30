@@ -60,8 +60,15 @@ export default class ExpensesQuery {
 
     const totalAmount = totalAmountResult._sum.amount ?? 0; // Default to 0 if no records found
 
+    // Separate expenses into firstInstallment and remainingInstallments
+    const firstInstallment = expenses.filter(expense => expense.currentInstallment === 1);
+    const remainingInstallments = expenses.filter(expense => expense.currentInstallment > 1);
+
     return {
-      expenses,
+      expenses: {
+        firstInstallment,
+        remainingInstallments,
+      },
       totalAmount,
     };
   }
