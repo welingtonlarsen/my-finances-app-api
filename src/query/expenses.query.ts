@@ -3,6 +3,9 @@ import type ExpensesSumQueryDTO from '../query/dto/expenses-sum.query.dto';
 import type { PrismaClient } from '@prisma/client';
 import ExpenseQueryDTO from '../query/dto/expense.query.dto';
 
+// It's hardcoded because I want to show all remainingInstallments before working deep on it
+const HARDCODED_EXPENSES_SIZE = 9999;
+
 export default class ExpensesQuery {
   @Context('userId')
   private userId?: string;
@@ -32,7 +35,7 @@ export default class ExpensesQuery {
         paymentMethod: true,
       },
       skip,
-      take: size,
+      take: HARDCODED_EXPENSES_SIZE,
       orderBy: [
         {
           date: 'desc',
