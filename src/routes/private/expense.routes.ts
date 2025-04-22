@@ -67,4 +67,38 @@ router.delete('/expense/:id', authMiddleware, async (req: Request, res: Response
   return res.status(204).send();
 });
 
+router.patch('/expense/:id', authMiddleware, async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const {
+    amount,
+    description,
+    date: dateStr,
+    categoryId,
+    paymentMethodId,
+    installments,
+    currentInstallment,
+  } = req.body;
+  
+  const updateDTO = { 
+    id: Number(id),
+    amount,
+    description,
+    categoryId,
+    paymentMethodId,
+    installments,
+    currentInstallment,
+    ...(dateStr !== undefined && { date: new Date(dateStr) }),
+  };
+
+  try {
+    const updatedExpense = await expensesService.updateExpense(updateDTO);
+    return res.status(200).json(updatedExpense);
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('not found')) {
+      return res.status(404).json({ error: error.message });
+    }
+    return res.status(500).json({ error: 'Failed to update expense' });
+  }
+});
+
 export const expenseRoutes = router;

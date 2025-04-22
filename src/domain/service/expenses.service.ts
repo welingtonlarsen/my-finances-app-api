@@ -107,4 +107,64 @@ export default class ExpensesService {
       throw new RepositoryGenericError(`Error trying to delete expense "${expenseId}".`);
     }
   }
+
+  async updateExpense(expenseDTO: Partial<ExpenseDTO> & { id: number }): Promise<ExpenseEntity> {
+    try {
+      // Check if expense exists and belongs to current user
+      const existingExpense = await this.prismaClient.expense.findFirst({
+        where: {
+          id: expenseDTO.id,
+          userId: Number(this.userId)
+        }
+      });
+
+      if (!existingExpense) {
+        throw new Error(`Expense with id ${expenseDTO.id} not found.`);
+      }
+
+      // Update the expense with only the provided fields
+      const updatedExpense = await this.prismaClient.expense.update({
+        where: {
+          id: expenseDTO.id
+        },
+        data: {
+          ...(expenseDTO.amount !== undefined && { amount: expenseDTO.amount }),
+          ...(expenseDTO.description !== undefined && { description: expenseDTO.description }),
+          ...(expenseDTO.date !== undefined && { date: expenseDTO.date }),
+          ...(expenseDTO.categoryId !== undefined && { categoryId: expenseDTO.categoryId }),
+          ...(expenseDTO.paymentMethodId !== undefined && { paymentMethodId: expenseDTO.paymentMethodId }),
+          ...(expenseDTO.installments !== undefined && { installments: expenseDTO.installments }),
+          ...(expenseDTO.currentInstallment !== undefined && { currentInstallment: expenseDTO.currentInstallment })
+        }
+      });
+
+      // Return the updated entity
+      return new ExpenseEntity(
+        updatedExpense.amount,
+        updatedExpense.description,
+        updatedExpense.date,
+        updatedExpense.categoryId,
+        updatedExpense.paymentMethodId,
+        updatedExpense.installments,
+        updatedExpense.currentInstallment,
+        updatedExpense.id
+      );
+    } catch (err) {
+      if (err instanceof PrismaClientKnownRequestError) {
+        if (err.code === 'P2003') {
+          throw new ForeignKeyError(
+            `Foreign key error on updating expense with id ${expenseDTO.id}.`
+          );
+        }
+      }
+      
+      if (err instanceof Error) {
+        throw err; // Re-throw user-generated errors (like expense not found)
+      }
+      
+      throw new RepositoryGenericError(
+        `Error trying to update expense with id ${expenseDTO.id}.`
+      );
+    }
+  }
 }
